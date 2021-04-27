@@ -55,10 +55,7 @@ func (fl *FileLogger) runGoroutine() {
 	for {
 		m, ok := <-MsgChannel
 		if ok {
-			//debug
-			fmt.Printf("before:%v\n", fl.fileObj)
 			fl.fileObj = fl.checkSize(fl.fileObj)
-			fmt.Printf("after :%v\n", fl.fileObj)
 			fmt.Fprintf(fl.fileObj, "[%s] [%s] [%s:%d]: %s\n", m.now, m.level, m.fileName, m.line, m.msg)
 			l, err := parse(m.level)
 			if err != nil {
@@ -81,15 +78,6 @@ func (fl *FileLogger) fileLog(lv LogLevel, msg string, a ...interface{}) {
 		panic(err)
 	}
 	now := time.Now()
-	// fl.fileObj = fl.checkSize(fl.fileObj)
-	// fl.fileObj = fl.checkDate(fl.fileObj)
-	// fmt.Printf("fileObj:%v\n", fl.fileObj)
-	// fmt.Fprintf(fl.fileObj, "[%s] [%s] [%s:%d]: %s\n", now.Format("2006-01-02 15:04:05"), levelStr, fileName, line, msg)
-	// fl.errFileObj = fl.checkSize(fl.errFileObj)
-	// fl.errFileObj = fl.checkDate(fl.errFileObj)
-	// if lv >= ERROR {
-	// 	fmt.Fprintf(fl.errFileObj, "[%s] [%s] [%s:%d]: %s\n", now.Format("2006-01-02 15:04:05"), levelStr, fileName, line, msg)
-	// }
 	MsgChannel <- &MsgInfo{
 		level:    levelStr,
 		msg:      msg,
